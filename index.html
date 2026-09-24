@@ -3,95 +3,166 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Violet Echo</title>
+    <title>Mapa viajero</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="noise"></div>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-block">
+          <span class="brand-mark">M</span>
+          <div>
+            <p class="eyebrow">Mapa</p>
+            <strong>Viaje nocturno</strong>
+          </div>
+        </div>
 
-    <div class="title-screen" id="titleScreen">
-      <div class="title-screen__glow"></div>
-      <div class="title-screen__content">
-        <p class="eyebrow">novela visual / historia ramificada</p>
-        <h1>Violet Echo</h1>
-        <p class="subtitle">Elige a tu personaje, arriesga tus decisiones y deja que la historia te responda.</p>
+        <div class="status-panel">
+          <p class="label">Ubicación actual</p>
+          <h2 id="locationTitle">Plaza del reloj</h2>
+          <p id="locationSubtitle">El corazón de la ciudad.</p>
+        </div>
 
-        <div class="character-select" id="characterSelect"></div>
+        <div class="traveler-box">
+          <p class="label">Viajero</p>
+          <div class="traveler-grid">
+            <div>
+              <span>Confianza</span>
+              <strong id="statTrust">0</strong>
+            </div>
+            <div>
+              <span>Valor</span>
+              <strong id="statCourage">0</strong>
+            </div>
+            <div>
+              <span>Instinto</span>
+              <strong id="statInstinct">0</strong>
+            </div>
+            <div>
+              <span>Vínculo</span>
+              <strong id="statBond">0</strong>
+            </div>
+          </div>
+        </div>
 
-        <div class="menu-buttons">
-          <button class="primary" id="startGameBtn">Comenzar historia</button>
-          <button id="shuffleBtn">Historia aleatoria</button>
+        <div class="visited-box">
+          <p class="label">Rutas visitadas</p>
+          <ul id="visitedList"></ul>
+        </div>
+
+        <div class="nav-box">
+          <p class="label">Navegación</p>
+          <p id="navHint">Estás en la plaza. Elige un destino o sigue la ruta activa.</p>
+        </div>
+
+        <div class="journal-box">
+          <p class="label">Diario de viaje</p>
+          <ul id="journalList"></ul>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Point & click</p>
+            <h1>Mapa de la ciudad</h1>
+          </div>
+          <button id="resetMapBtn" class="ghost-btn">Reiniciar mapa</button>
+        </header>
+
+        <div class="map-panel">
+          <div class="map-surface">
+            <div class="terrain terrain-one"></div>
+            <div class="terrain terrain-two"></div>
+            <div class="terrain terrain-three"></div>
+            <div class="grid-lines"></div>
+
+            <button class="hotspot active" data-location="plaza" style="left: 49%; top: 58%;">
+              <span>Plaza</span>
+            </button>
+            <button class="hotspot" data-location="biblioteca" style="left: 28%; top: 36%;">
+              <span>Biblioteca</span>
+            </button>
+            <button class="hotspot" data-location="puerto" style="left: 76%; top: 68%;">
+              <span>Puerto</span>
+            </button>
+            <button class="hotspot" data-location="bosque" style="left: 18%; top: 68%;">
+              <span>Bosque</span>
+            </button>
+            <button class="hotspot" data-location="mercado" style="left: 62%; top: 28%;">
+              <span>Mercado</span>
+            </button>
+            <button class="hotspot" data-location="castillo" style="left: 68%; top: 46%;">
+              <span>Castillo</span>
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <aside class="detail-panel">
+        <div class="detail-card" id="detailCard">
+          <p class="eyebrow">Destino</p>
+          <h3 id="detailName">Plaza del reloj</h3>
+          <p id="detailText">La plaza está llena de luz tibia y gente que habla en voz baja mientras el reloj marca la hora de partir.</p>
+
+          <div class="meta-grid">
+            <div>
+              <span>Ambiente</span>
+              <strong id="detailMood">Vibrante</strong>
+            </div>
+            <div>
+              <span>Acción</span>
+              <strong id="detailAction">Explorar</strong>
+            </div>
+          </div>
+
+          <div class="people-section">
+            <p class="label">Personajes</p>
+            <div id="peopleList" class="people-list"></div>
+          </div>
+
+          <div id="activeRouteBox" class="active-route-box">
+            <p class="label">Ruta activa</p>
+            <strong id="activeRouteTitle">Sin ruta elegida</strong>
+            <p id="activeRouteText">Elige a alguien del lugar para seguir su camino.</p>
+            <div id="storyChoices" class="story-choice-list"></div>
+          </div>
+
+          <div class="detail-actions">
+            <button id="travelBtn" class="primary-btn">Ir aquí</button>
+            <button id="backBtn" class="secondary-btn">Volver al mapa</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="personModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-content">
+        <button id="closeModalBtn" class="close-modal" aria-label="Cerrar">×</button>
+        <p class="eyebrow">Persona</p>
+        <h3 id="modalTitle">Nombre</h3>
+        <p id="modalSummary"></p>
+
+        <div id="modalProfile" class="modal-profile-box"></div>
+
+        <div class="modal-route-box">
+          <p class="label">Ruta personal</p>
+          <ul id="modalRouteList" class="route-list"></ul>
+        </div>
+
+        <div class="modal-choice-box">
+          <p class="label">Preguntas</p>
+          <div id="modalChoiceList" class="choice-list-modal"></div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="followRouteBtn" class="primary-btn">Seguir su ruta</button>
         </div>
       </div>
     </div>
-
-    <main class="game-shell hidden" id="gameShell">
-      <header class="topbar">
-        <div class="brand">
-          <span class="brand-mark">VE</span>
-          <span>Violet Echo</span>
-        </div>
-        <div class="chapter-tag" id="chapterTag">Capítulo I · estación de lluvia</div>
-      </header>
-
-      <section class="stats-panel">
-        <div class="stat-box">
-          <span>Confianza</span>
-          <strong id="statTrust">0</strong>
-        </div>
-        <div class="stat-box">
-          <span>Coraje</span>
-          <strong id="statCourage">0</strong>
-        </div>
-        <div class="stat-box">
-          <span>Memoria</span>
-          <strong id="statMemory">0</strong>
-        </div>
-        <div class="stat-box highlight">
-          <span>Peso de la historia</span>
-          <strong id="storyWeight">0</strong>
-        </div>
-      </section>
-
-      <section class="scene-wrapper">
-        <div class="scene-panel" id="scenePanel">
-          <div class="scene-panel__backdrop" id="sceneBackdrop"></div>
-          <div class="scene-panel__character left" id="characterLeft"></div>
-          <div class="scene-panel__character right" id="characterRight"></div>
-        </div>
-
-        <div class="vignette-strip" id="vignetteStrip">
-          <article class="vignette active">
-            <span>01</span>
-            <p>La estación</p>
-          </article>
-          <article class="vignette">
-            <span>02</span>
-            <p>La nota</p>
-          </article>
-          <article class="vignette">
-            <span>03</span>
-            <p>La verdad</p>
-          </article>
-          <article class="vignette">
-            <span>04</span>
-            <p>Destino</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="dialogue-box" id="dialogueBox">
-        <div class="dialogue-box__meta">
-          <span class="speaker" id="speakerName">Ari</span>
-          <span class="status" id="currentStatus">En línea</span>
-        </div>
-        <p class="dialogue-text" id="dialogueText"></p>
-        <div class="choice-list" id="choiceList"></div>
-      </section>
-    </main>
 
     <script src="script.js"></script>
   </body>
